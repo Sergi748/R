@@ -1,3 +1,5 @@
+
+# Create Dummies by character variables
 createDummiesBasics = function(tabla) {
   
   for (col in 1:ncol(tabla)) {
@@ -14,6 +16,7 @@ createDummiesBasics = function(tabla) {
   
 }
 
+# Create Dummies by character variables or by given variables
 createDummiesVars = function(tabla, vars = FALSE) {
   
   for (col in 1:ncol(tabla)) {
@@ -40,6 +43,7 @@ createDummiesVars = function(tabla, vars = FALSE) {
   
 }
 
+# Create Dummies by character variables or by given variables, the user can to decide if remove variables or not
 createDummies = function(tabla, remove = FALSE, vars = FALSE) {
   
   varsname = c()
