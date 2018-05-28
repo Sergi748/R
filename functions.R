@@ -1,4 +1,5 @@
 
+# Functions to create dummies for the character variables or the variables given for the users
 # Create Dummies by character variables
 createDummiesBasics = function(tabla) {
   
@@ -73,6 +74,50 @@ createDummies = function(tabla, remove = FALSE, vars = FALSE) {
     tabla[,varsDummy] = NULL
   } else if (remove == TRUE && vars == FALSE) {
     tabla[,varsname] = NULL
+  }
+  
+  return(tabla)
+  
+}
+
+
+# Function to ipnut the NA´s by the elements given by the user.
+# The user should to give two tables, one of this is a dataset with the values, the other table have two columns,
+# in the first column the user put the name of the variable and the other column have to put how to input the NA´s
+# (mean, mode...)
+InputNA = function (tabla, imputaciones) {
+  
+  # Tabla: dataset con los datos a analizar
+  # Tablon imputaciones: dataset con dos columnas, en una el nombre de la variable
+  # en la otra columna indicamos a que queremos imputar los NA?s
+  
+  for (i in 1:ncol(tabla)) {
+    
+    tipo = as.character(imputaciones[i, "Imputacion"])
+    tipo = tolower(tipo)
+    
+    # Obtencion de la funcion a la cual vamos a imputar los NA?s, moda o media o mediana
+    if (tipo != "mode") {
+      modo = eval(parse(text = as.character(imputaciones[i, "Imputacion"])))
+    } else {
+      modo = function(x){
+        ux = unique(x)
+        ux[which.max(tabulate(match(x, ux)))]
+      }
+    }
+    
+    if (class(tabla[,i]) == "Date") {
+      tabla[,i] = as.character(tabla[,i])
+    } 
+    
+    if (class(tabla[,i]) == "numeric") {
+      tabla[,i] = ifelse(is.na(tabla[,i]), modo(tabla[,i], na.rm = TRUE), tabla[,i])
+    } else if (class(tabla[,i]) == "character") {
+      tabla[,i] = ifelse(is.na(tabla[,i]), modo(tabla[,i]), tabla[,i])
+    } else {
+      tabla[,i] = ifelse(is.na(tabla[,i]), modo(tabla[,i], na.rm = TRUE), tabla[,i])
+    }
+    
   }
   
   return(tabla)
