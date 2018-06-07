@@ -205,8 +205,8 @@ dependenciaChisqVcramer <- function(path, tablon, id, target, vars_remove, limit
     result = rbind(result, finalFunction(dataset[,i], table_target))
   }
   
-  colnames(result) = c("value_chi", "value_vcramer")
   row.names(result) = NULL
+  colnames(result) = c("value_chi", "value_vcramer")
   result$dependencia_chi <- ifelse(result$value_chi > limite_chi, "independientes", "dependientes")
   result$dependencia_Cramer <- ifelse(result$value_vcramer > limite_cramer, "dependientes", "independientes")
   result$variable <- names(dataset)
