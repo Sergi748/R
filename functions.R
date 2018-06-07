@@ -158,7 +158,7 @@ selectVarCor = function(n_vars, target, id, vars_remove, path, name_table) {
   
 }
 
-dependenciaChisqVcramer <- function(path, tablon, id, target, vars_remove, limite_chi, limite_cramer) {
+dependenciaChisqVcramer <- function(path, name_table, id, target, vars_remove, limite_chi, limite_cramer) {
   
   table = read.csv(paste0(path, name_table), sep = ",")
   table_target = table[, target]
