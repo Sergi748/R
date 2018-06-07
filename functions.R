@@ -160,7 +160,11 @@ selectVarCor = function(n_vars, target, id, vars_remove, path, name_table) {
 
 dependenciaChisqVcramer <- function(path, name_table, id, target, vars_remove, limite_chi, limite_cramer) {
   
-  table = read.csv(paste0(path, name_table), sep = ",")
+  if (length(grep(".rds", name_table)) > 0) {
+    table = readRDS(paste0(path, name_table))
+  } else if (length(grep(".csv", name_table)) > 0) {
+    table = read.csv(paste0(path, name_table), sep = ",")
+  }
   table_target = table[, target]
   dataset = table[, !colnames(table) %in% c(id, target, vars_remove)]
   
