@@ -128,11 +128,12 @@ InputNA = function (tabla, imputaciones) {
 selectVarCor = function(n_vars, target, id, vars_remove, path, name_table) {
   
   # Read table
-  if (length(grep(".rds", name_table)) > 0) {
+  if (grepl(".rds", name_table)) {
     table = readRDS(paste0(path, name_table))
-  } else if (length(grep(".csv", name_table)) > 0) {
+  } else if (grepl(".csv", name_table)) {
     table = read.csv(paste0(path, name_table), sep = ",")
   }
+  
   # table = read.csv("~/PRUEBAS PERSONALES/1. Titanic/Resultados/tablon_completo.csv", sep = ",")
   if (!missing(vars_remove)) {
     table[, c(id, vars_remove)] = NULL
@@ -161,9 +162,9 @@ selectVarCor = function(n_vars, target, id, vars_remove, path, name_table) {
 dependenciaChisqVcramer <- function(path, name_table, id, target, vars_remove, limite_chi, limite_cramer) {
   
   # Read table
-  if (length(grep(".rds", name_table)) > 0) {
+  if (grepl(".rds", name_table)) {
     table = readRDS(paste0(path, name_table))
-  } else if (length(grep(".csv", name_table)) > 0) {
+  } else if (grepl(".csv", name_table)) {
     table = read.csv(paste0(path, name_table), sep = ",")
   }
   
@@ -223,4 +224,3 @@ dependenciaChisqVcramer <- function(path, name_table, id, target, vars_remove, l
   return(result[, c('variable', 'value_chi', 'value_vcramer', 'dependencia_chi', 'dependencia_Cramer')])
   
 }
-
