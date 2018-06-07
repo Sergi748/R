@@ -160,16 +160,19 @@ selectVarCor = function(n_vars, target, id, vars_remove, path, name_table) {
 
 dependenciaChisqVcramer <- function(path, name_table, id, target, vars_remove, limite_chi, limite_cramer) {
   
+  # Read table
   if (length(grep(".rds", name_table)) > 0) {
     table = readRDS(paste0(path, name_table))
   } else if (length(grep(".csv", name_table)) > 0) {
     table = read.csv(paste0(path, name_table), sep = ",")
   }
+  
+  # Filter table
   table_target = table[, target]
   dataset = table[, !colnames(table) %in% c(id, target, vars_remove)]
   
-  chivcramer = function(variable, tablon_target){
-    # Tabla de contingencia
+  # Create differents functions
+  chiVcramer = function(variable, tablon_target){
     data = table(variable, tablon_target,useNA = "ifany")
     
     if (nrow(data) < 2 | ncol(data) < 2 ) {
@@ -198,17 +201,19 @@ dependenciaChisqVcramer <- function(path, name_table, id, target, vars_remove, l
   finalFunction = function(var, tablon_target) {
     if (class(var) %in% c("numeric", "integer")) {
       x1 = quantiles(var)
-      return(chivcramer(x1, table_target))
+      return(chiVcramer(x1, table_target))
     } else {
-      return(chivcramer(x, table_target))
+      return(chiVcramer(x, table_target))
     }
   }
   
+  # Go through the different variables of the data set
   result = data.frame()
   for (i in 1:ncol(dataset)) {
     result = rbind(result, finalFunction(dataset[,i], table_target))
   }
   
+  # Create final data set
   row.names(result) = NULL
   colnames(result) = c("value_chi", "value_vcramer")
   result$dependencia_chi <- ifelse(result$value_chi > limite_chi, "independientes", "dependientes")
