@@ -224,3 +224,4 @@ dependenciaChisqVcramer <- function(path, name_table, id, target, vars_remove, l
   return(result[, c('variable', 'value_chi', 'value_vcramer', 'dependencia_chi', 'dependencia_Cramer')])
   
 }
+
