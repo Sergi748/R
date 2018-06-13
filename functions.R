@@ -18,10 +18,10 @@ createDummiesBasics = function(tabla) {
 }
 
 # Create Dummies by character variables or by given variables
-createDummiesVars = function(tabla, vars = FALSE) {
+createDummiesVars = function(tabla, vars) {
   
   for (col in 1:ncol(tabla)) {
-    if (vars == FALSE) {
+    if (missing(vars)) {
       if (class(tabla[,col]) == "character") {
         for (i in levels(as.factor(tabla[,col]))) {
           booleano = sapply(tabla[,col], function(x) ifelse(x == i, 1, 0))
@@ -30,7 +30,7 @@ createDummiesVars = function(tabla, vars = FALSE) {
         }
       }
     } else {
-      if (colnames(tabla)[col] %in% varsDummy) {
+      if (colnames(tabla)[col] %in% vars) {
         for (i in levels(as.factor(tabla[,col]))) {
           booleano = sapply(tabla[,col], function(x) ifelse(x == i, 1, 0))
           tabla = cbind(tabla, booleano)
@@ -45,12 +45,12 @@ createDummiesVars = function(tabla, vars = FALSE) {
 }
 
 # Create Dummies by character variables or by given variables, the user can to decide if remove variables or not
-createDummies = function(tabla, remove = FALSE, vars = FALSE) {
+createDummies = function(tabla, remove = FALSE, vars) {
   
   varsname = c()
   
   for (col in 1:ncol(tabla)) {
-    if (vars == FALSE) {
+    if (missing(vars)) {
       if (class(tabla[,col]) == "character") {
         varsname = append(varsname, colnames(tabla)[col])
         for (i in levels(as.factor(tabla[,col]))) {
@@ -60,7 +60,7 @@ createDummies = function(tabla, remove = FALSE, vars = FALSE) {
         }
       }
     } else {
-      if (colnames(tabla)[col] %in% varsDummy) {
+      if (colnames(tabla)[col] %in% vars) {
         for (i in levels(as.factor(tabla[,col]))) {
           booleano = sapply(tabla[,col], function(x) ifelse(x == i, 1, 0))
           tabla = cbind(tabla, booleano)
@@ -70,10 +70,10 @@ createDummies = function(tabla, remove = FALSE, vars = FALSE) {
     }
   }
   
-  if (remove == TRUE && vars != FALSE) {
-    tabla[,varsDummy] = NULL
-  } else if (remove == TRUE && vars == FALSE) {
-    tabla[,varsname] = NULL
+  if (remove == TRUE && !missing(vars)) {
+    tabla[, vars] = NULL
+  } else if (remove == TRUE && missing(vars)) {
+    tabla[, varsname] = NULL
   }
   
   return(tabla)
