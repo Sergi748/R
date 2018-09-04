@@ -4,10 +4,11 @@ findBetterLeaf = function(tree, Number1) {
   # Create table 
   tablon = as.data.frame(tree$frame$dev)
   colnames(tablon)[1] = "NumberOnes"
-  tablon$NumberZeros = tree$frame$n
+  tablon$NumberZeros = tree$frame$n - tablon$NumberOnes
   tablon$Orden = 1:nrow(tablon)
   tablon$Node = row.names(tree$frame)
-  tablon = tablon[order(tablon$NumberOnes, decreasing = FALSE),]
+  tablon$Pct = (tablon$NumberZeros/length(tree$where))*100
+  tablon = tablon[order(tablon$NumberOnes, -tablon$NumberZeros),]
   tablon_filter = tablon[tablon$NumberOnes == Number1, ]
   tablon_filter = tablon_filter[order(tablon_filter$NumberZeros, decreasing = TRUE), ]
   # path of better node
@@ -15,7 +16,7 @@ findBetterLeaf = function(tree, Number1) {
   table_leaf = data.frame()
   
   for (i in 2:length(leaf_path[[1]])) {
-    
+  
     a = leaf_path[[1]][i]
     all_parts <- strsplit(a, split = "<|<=|>|>=|=", perl = T)
     all_parts <- all_parts[[1]][sapply(all_parts[[1]], function(x) x != "")]
@@ -27,9 +28,10 @@ findBetterLeaf = function(tree, Number1) {
     
   }
   
-  vars = attr(tree$terms,"term.labels")
-  return (list(tablon, table_leaf, vars))
+  vars = as.character(unique(tree$frame$var[tree$frame$var != "<leaf>"]))
   
+  return (list(tablon, table_leaf, vars))
+
 }
 
 # Example of how to launch it 
@@ -37,3 +39,5 @@ leaf = findBetterLeaf(tree = tree, Number1 = 0)
 table = leaf[[1]]
 table_path = leaf[[2]]
 vars = leaf[[3]]
+
+                                       
