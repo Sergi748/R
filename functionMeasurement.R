@@ -31,9 +31,9 @@ measurement = function(score, percentiles, path_output) {
       maxScore = max(score[score$percentil <= quantiles[i], "Score"])
       avgScore = mean(score[score$percentil <= quantiles[i], "Score"])
       data = t(data.frame(c(quantiles[i], sumIds, target, sumIdsAcum, targetAcum, ratioTarget, ratioTargetAcum,
-                            pctTargetCapt, pctTargetCaptAcum, minScore, maxScore, avgScore)))
+                              pctTargetCapt, pctTargetCaptAcum, minScore, maxScore, avgScore)))
       colnames(data) = c("Quantile", "Sum_Ids", "Target", "Sum_Ids_Acum", "Target_Acum", "Ratio_Target", "Ratio_Target_Acum",
-                         "PctOfTargetCapt", "PctOfTargetCapt_Acum", "Min_Score", "Max_Score", "Average_Score")
+                           "PctOfTargetCapt", "PctOfTargetCapt_Acum", "Min_Score", "Max_Score", "Average_Score")
       table_final = rbind(table_final, data)
       
     } else {
@@ -50,14 +50,18 @@ measurement = function(score, percentiles, path_output) {
       maxScore = max(score[score$percentil > quantiles[i - 1] & score$percentil <= quantiles[i], "Score"])
       avgScore = mean(score[score$percentil > quantiles[i - 1] & score$percentil <= quantiles[i], "Score"])
       data = t(data.frame(c(quantiles[i], sumIds, target, sumIdsAcum, targetAcum, ratioTarget, ratioTargetAcum,
-                            pctTargetCapt, pctTargetCaptAcum, minScore, maxScore, avgScore)))
+                              pctTargetCapt, pctTargetCaptAcum, minScore, maxScore, avgScore)))
       colnames(data) = c("Quantile", "Sum_Ids", "Target", "Sum_Ids_Acum", "Target_Acum", "Ratio_Target", "Ratio_Target_Acum",
-                         "PctOfTargetCapt", "PctOfTargetCapt_Acum", "Min_Score", "Max_Score", "Average_Score")
+                           "PctOfTargetCapt", "PctOfTargetCapt_Acum", "Min_Score", "Max_Score", "Average_Score")
       table_final = rbind(table_final, data)
       
     }
     
   }
+  
+  # Add uplift and uplift acumulate in the table
+  table_final$Uplift = table_final$Ratio_Target/table_final$Ratio_Target_Acum[percentiles]
+  table_final$Uplift_Acum = table_final$PctOfTargetCapt_Acum*100/table_final$Quantile*100/table_final$Quantile[percentiles]
   
   rownames(table_final) = NULL
   if (!missing(path_output)) {
@@ -65,7 +69,9 @@ measurement = function(score, percentiles, path_output) {
   } else {
     return(table_final)
   }
-  
+
 }
 
+# Example of how to launch it 
 measurement(score = table, percentiles = 20, path_output = path_output)
+
