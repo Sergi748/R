@@ -10,7 +10,7 @@ findBetterLeaf = function(tree, Number1) {
   tablon$Pct = (tablon$NumberZeros/length(tree$where))*100
   tablon = tablon[order(tablon$NumberOnes, -tablon$NumberZeros),]
   tablon_filter = tablon[tablon$NumberOnes == Number1, ]
-  tablon_filter = tablon_filter[order(tablon_filter$NumberZeros, decreasing = TRUE), ]
+  tablon_filter = tablon_filter[order(tablon_filter$NumberOnes, -tablon_filter$NumberZeros), ]
   # path of better node
   leaf_path = as.list(path.rpart(tree, nodes = tablon_filter[1, "Node"], print.it = FALSE)) 
   table_leaf = data.frame()
